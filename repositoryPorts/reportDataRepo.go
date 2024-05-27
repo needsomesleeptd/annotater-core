@@ -6,7 +6,7 @@ import (
 )
 
 type IReportDataRepository interface {
-	AddReport(doc *models.ErrorReport) error
+	AddDocument(doc *models.ErrorReport) error
 	DeleteReportByID(id uuid.UUID) error
 	GetDocumentByID(id uuid.UUID) (*models.ErrorReport, error)
 }
