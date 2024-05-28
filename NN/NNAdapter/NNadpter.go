@@ -4,7 +4,9 @@ import (
 	"errors"
 	"fmt"
 
+	nn_model_handler "github.com/needsomesleeptd/annotater-core/NN/NNAdapter/NNmodelhandler"
 	"github.com/needsomesleeptd/annotater-core/models"
+	models_dto "github.com/needsomesleeptd/annotater-core/models/dto"
 )
 
 var (

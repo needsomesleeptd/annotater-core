@@ -92,7 +92,7 @@ func (serv *DocumentService) LoadDocument(documentMetaData models.DocumentMetaDa
 	}
 	serv.logger.Infof("report for document %s was created\n", documentMetaData.ID)
 
-	err = serv.reportRepo.AddReport(errReport)
+	err = serv.reportRepo.AddDocument(errReport)
 	if err != nil {
 		err = errors.Wrapf(err, REPORT_ERR_STRF, documentMetaData.ID)
 		serv.logger.Error(err)
