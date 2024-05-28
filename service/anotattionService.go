@@ -66,7 +66,6 @@ func CheckPngFile(pngFile []byte) error {
 
 func (serv *AnotattionService) AddAnottation(anotattion *models.Markup) error {
 	if !AreBBsValid(anotattion.ErrorBB) {
-
 		serv.logger.WithFields(
 			logrus.Fields{"userID": anotattion.CreatorID,
 				"src": "AnnotService.Add"}).
@@ -87,10 +86,15 @@ func (serv *AnotattionService) AddAnottation(anotattion *models.Markup) error {
 
 	err = serv.repo.AddAnottation(anotattion)
 	if err != nil {
-		serv.logger.WithFields(
+		logFields := serv.logger.WithFields(
 			logrus.Fields{"userID": anotattion.CreatorID,
-				"src": "AnnotService.Add"}).
-			Error(err)
+				"src": "AnnotService.Add"})
+
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return errors.Wrapf(err, ADDING_ANNOT_ERR_CREATOR_STRF, anotattion.CreatorID)
 	}
@@ -107,11 +111,17 @@ func (serv *AnotattionService) DeleteAnotattion(id uint64) error {
 	err := serv.repo.DeleteAnotattion(id)
 	if err != nil {
 
-		serv.logger.WithFields(
+		logFields := serv.logger.WithFields(
 			logrus.Fields{
 				"src":     "AnnotService.Delete",
-				"annotID": id}).
-			Error(err)
+				"annotID": id})
+
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
+
 		return errors.
 			Wrapf(err, DELETING_ANNOT_ERR_STRF, id)
 	}
@@ -128,11 +138,16 @@ func (serv *AnotattionService) DeleteAnotattion(id uint64) error {
 func (serv *AnotattionService) GetAnottationByID(id uint64) (*models.Markup, error) {
 	markup, err := serv.repo.GetAnottationByID(id)
 	if err != nil {
-		serv.logger.WithFields(
+		logFields := serv.logger.WithFields(
 			logrus.Fields{
 				"src":     "AnnotService.GetByID",
-				"annotID": id}).
-			Error(err)
+				"annotID": id})
+
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return markup, errors.Wrapf(err, GETTING_ANNOT_ERR_STRF, id)
 	}
@@ -150,11 +165,16 @@ func (serv *AnotattionService) GetAnottationByUserID(userID uint64) ([]models.Ma
 	markups, err := serv.repo.GetAnottationsByUserID(userID)
 	if err != nil {
 
-		serv.logger.WithFields(
+		logFields := serv.logger.WithFields(
 			logrus.Fields{
 				"src":    "AnnotService.GetByUserID",
-				"userID": userID}).
-			Error(err)
+				"userID": userID})
+
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return nil, errors.Wrapf(err, GETTING_ANNOT_ERR_CREATOR_STRF, userID)
 	}
@@ -171,10 +191,14 @@ func (serv *AnotattionService) GetAnottationByUserID(userID uint64) ([]models.Ma
 func (serv *AnotattionService) GetAllAnottations() ([]models.Markup, error) {
 	markups, err := serv.repo.GetAllAnottations()
 	if err != nil {
-		serv.logger.WithFields(
+		logFields := serv.logger.WithFields(
 			logrus.Fields{
-				"src": "AnnotService.GetAll"}).
-			Error(err)
+				"src": "AnnotService.GetAll"})
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return nil, errors.Wrap(err, GETTING_ALL_ANNOT_ERR_STR)
 	}

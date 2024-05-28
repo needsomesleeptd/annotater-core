@@ -68,7 +68,13 @@ func (serv *AuthService) SignUp(candidate *models.User) error {
 	passHash, err = serv.passwordHasher.GenerateHash(candidate.Password)
 	if err != nil {
 		err = err_wr.Wrapf(err, "error for user with login %v:%v", candidate.Login, ErrGeneratingHash)
-		serv.logger.Warn(err)
+
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			serv.logger.Error(err)
+		} else {
+			serv.logger.Warn(err)
+		}
+
 		return err
 	}
 	candidateHashedPasswd := *candidate
@@ -77,7 +83,11 @@ func (serv *AuthService) SignUp(candidate *models.User) error {
 	err = serv.userRepo.CreateUser(&candidateHashedPasswd)
 	if err != nil {
 		err = err_wr.Wrapf(err, "error for user with login %v:%v", candidate.Login, ErrCreatingUser)
-		serv.logger.Error(err)
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			serv.logger.Error(err)
+		} else {
+			serv.logger.Warn(err)
+		}
 		return err
 	}
 	serv.logger.Infof("auth svc - successfully signed up as user with login %v", candidate.Login)
@@ -103,7 +113,11 @@ func (serv *AuthService) SignIn(candidate *models.User) (string, error) {
 
 	if err != nil {
 		err = err_wr.Wrapf(err, ERR_LOGIN_STRF+":%v", candidate.Login, ErrWrongLogin)
-		serv.logger.Error(err)
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			serv.logger.Error(err)
+		} else {
+			serv.logger.Warn(err)
+		}
 		return "", err
 	}
 	err = serv.passwordHasher.ComparePasswordhash(candidate.Password, user.Password)
