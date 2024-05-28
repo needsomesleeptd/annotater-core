@@ -1,4 +1,4 @@
-package models_dto
+package models_dto_model
 
 import "github.com/needsomesleeptd/annotater-core/models"
 

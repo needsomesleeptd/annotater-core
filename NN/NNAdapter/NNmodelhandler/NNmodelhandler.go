@@ -7,7 +7,7 @@ import (
 	"mime/multipart"
 	"net/http"
 
-	models_dto "github.com/needsomesleeptd/annotater-core/models/dto"
+	models_dto_model "github.com/needsomesleeptd/annotater-core/models/dto"
 	"github.com/sirupsen/logrus"
 )
 
@@ -23,7 +23,7 @@ var (
 )
 
 type IModelHandler interface {
-	GetModelResp(req ModelRequest) ([]models_dto.Markup, error)
+	GetModelResp(req ModelRequest) ([]models_dto_model.Markup, error)
 }
 
 type HttpModelHandler struct {
@@ -39,7 +39,7 @@ type ModelRequest struct {
 	DocumentData []byte `json:"document_data"`
 }
 
-func (h *HttpModelHandler) GetModelResp(req ModelRequest) ([]models_dto.Markup, error) {
+func (h *HttpModelHandler) GetModelResp(req ModelRequest) ([]models_dto_model.Markup, error) {
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
@@ -67,7 +67,7 @@ func (h *HttpModelHandler) GetModelResp(req ModelRequest) ([]models_dto.Markup, 
 		return nil, errors.Join(ErrGettingResponse, err)
 	}
 
-	var markupsDto []models_dto.Markup
+	var markupsDto []models_dto_model.Markup
 
 	err = json.NewDecoder(jsonResp.Body).Decode(&markupsDto)
 	if err != nil {

@@ -52,11 +52,15 @@ func (serv *AnotattionTypeService) AddAnottationType(anotattionType *models.Mark
 	err := serv.repo.AddAnottationType(anotattionType) // Here might be error or warning, important
 	if err != nil {
 
-		serv.log.WithFields(
+		logFields := serv.log.WithFields(
 			logrus.Fields{
 				"src":         "AnnotTypeService.AddAnottationType",
-				"annotTypeID": anotattionType.ID}).
-			Error(err)
+				"annotTypeID": anotattionType.ID})
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return errors.Wrapf(err, ADDING_ANNOTATTION_ERR_STRF, anotattionType.ID)
 	}
@@ -74,11 +78,15 @@ func (serv *AnotattionTypeService) DeleteAnotattionType(id uint64) error {
 	err := serv.repo.DeleteAnotattionType(id)
 	if err != nil {
 
-		serv.log.WithFields(
+		logFields := serv.log.WithFields(
 			logrus.Fields{
 				"src":         "AnnotTypeService.DeleteAnottationType",
-				"annotTypeID": id}).
-			Error(err)
+				"annotTypeID": id})
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return errors.Wrapf(err, DELETING_ANNOTATTION_ERR_STRF, id)
 	}
@@ -95,11 +103,15 @@ func (serv *AnotattionTypeService) GetAnottationTypeByID(id uint64) (*models.Mar
 	markup, err := serv.repo.GetAnottationTypeByID(id)
 	if err != nil {
 
-		serv.log.WithFields(
+		logFields := serv.log.WithFields(
 			logrus.Fields{
 				"src":         "AnnotTypeService.GetAnottationTypeByID",
-				"annotTypeID": id}).
-			Error(err)
+				"annotTypeID": id})
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return nil, errors.Wrapf(err, GETTING_ANNOTATTION_STR_ERR_STRF, id)
 	}
@@ -117,11 +129,15 @@ func (serv *AnotattionTypeService) GetAnottationTypesByIDs(ids []uint64) ([]mode
 	markupTypes, err := serv.repo.GetAnottationTypesByIDs(ids)
 	if err != nil {
 
-		serv.log.WithFields(
+		logFields := serv.log.WithFields(
 			logrus.Fields{
 				"src":          "AnnotTypeService.GetAnottationTypeByID",
-				"annotTypeIDs": ids}).
-			Error(err)
+				"annotTypeIDs": ids})
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return nil, errors.Wrapf(err, GETTING_ANNOTATTION_STR_ERR_STRF, ids)
 	}
@@ -137,11 +153,15 @@ func (serv *AnotattionTypeService) GetAnottationTypesByIDs(ids []uint64) ([]mode
 func (serv *AnotattionTypeService) GetAnottationTypesByUserID(id uint64) ([]models.MarkupType, error) {
 	markupTypes, err := serv.repo.GetAnottationTypesByUserID(id)
 	if err != nil {
-		serv.log.WithFields(
+		logFields := serv.log.WithFields(
 			logrus.Fields{
 				"src":    "AnnotTypeService.GetAnottationTypesByUserID",
-				"userID": id}).
-			Error(err)
+				"userID": id})
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 		return nil, errors.Wrapf(err, GETTING_ANNOTATTION_STR_ERR_STRF, id)
 	}
 
@@ -157,10 +177,14 @@ func (serv *AnotattionTypeService) GetAllAnottationTypes() ([]models.MarkupType,
 	markupTypes, err := serv.repo.GetAllAnottationTypes()
 	if err != nil {
 
-		serv.log.WithFields(
+		logFields := serv.log.WithFields(
 			logrus.Fields{
-				"src": "AnnotTypeService.GetAllAnottationTypes"}).
-			Error(err)
+				"src": "AnnotTypeService.GetAllAnottationTypes"})
+		if errors.Is(err, models.ErrDatabaseConnection) {
+			logFields.Error(err)
+		} else {
+			logFields.Warn(err)
+		}
 
 		return nil, errors.Wrap(err, "error getting all annotation types")
 	}
