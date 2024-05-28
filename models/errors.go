@@ -29,6 +29,7 @@ var (
 	ErrDuplicateMarkupType = NewUserErr("ID of this markup already exists\n")
 	ErrViolatingKeyAnnot   = NewUserErr("there is no annot type for this anotattion\n")
 )
+var ErrDatabaseConnection = errors.New("error in getting connection to db")
 
 func GetUserError(err error) error { // error which will be returned to user
 	var userError *UserError
