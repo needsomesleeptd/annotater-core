@@ -90,7 +90,7 @@ func (serv *AnotattionService) AddAnottation(anotattion *models.Markup) error {
 		serv.logger.WithFields(
 			logrus.Fields{"userID": anotattion.CreatorID,
 				"src": "AnnotService.Add"}).
-			Warn(err)
+			Error(err)
 
 		return errors.Wrapf(err, ADDING_ANNOT_ERR_CREATOR_STRF, anotattion.CreatorID)
 	}
@@ -111,7 +111,7 @@ func (serv *AnotattionService) DeleteAnotattion(id uint64) error {
 			logrus.Fields{
 				"src":     "AnnotService.Delete",
 				"annotID": id}).
-			Warn(err)
+			Error(err)
 		return errors.
 			Wrapf(err, DELETING_ANNOT_ERR_STRF, id)
 	}
@@ -132,7 +132,7 @@ func (serv *AnotattionService) GetAnottationByID(id uint64) (*models.Markup, err
 			logrus.Fields{
 				"src":     "AnnotService.GetByID",
 				"annotID": id}).
-			Warn(err)
+			Error(err)
 
 		return markup, errors.Wrapf(err, GETTING_ANNOT_ERR_STRF, id)
 	}
@@ -154,7 +154,7 @@ func (serv *AnotattionService) GetAnottationByUserID(userID uint64) ([]models.Ma
 			logrus.Fields{
 				"src":    "AnnotService.GetByUserID",
 				"userID": userID}).
-			Warn(err)
+			Error(err)
 
 		return nil, errors.Wrapf(err, GETTING_ANNOT_ERR_CREATOR_STRF, userID)
 	}
@@ -174,7 +174,7 @@ func (serv *AnotattionService) GetAllAnottations() ([]models.Markup, error) {
 		serv.logger.WithFields(
 			logrus.Fields{
 				"src": "AnnotService.GetAll"}).
-			Warn(err)
+			Error(err)
 
 		return nil, errors.Wrap(err, GETTING_ALL_ANNOT_ERR_STR)
 	}

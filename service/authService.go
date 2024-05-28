@@ -77,7 +77,7 @@ func (serv *AuthService) SignUp(candidate *models.User) error {
 	err = serv.userRepo.CreateUser(&candidateHashedPasswd)
 	if err != nil {
 		err = err_wr.Wrapf(err, "error for user with login %v:%v", candidate.Login, ErrCreatingUser)
-		serv.logger.Warn(err)
+		serv.logger.Error(err)
 		return err
 	}
 	serv.logger.Infof("auth svc - successfully signed up as user with login %v", candidate.Login)
